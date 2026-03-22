@@ -46,9 +46,8 @@ public class Post {
 
     /**
      * Conteúdo completo do post (pode ser grande, por isso TEXT)
-     * @Lob = Large Object, para textos grandes
+     * Para PostgreSQL, basta usar columnDefinition = "TEXT"
      */
-    @Lob
     @Column(nullable = false, columnDefinition = "TEXT")
     private String content;
 
