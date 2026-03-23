@@ -1,0 +1,24 @@
+# Configuração do Prometheus
+# Este arquivo diz ao Prometheus ONDE buscar as métricas
+
+global:
+  # Intervalo de coleta de métricas (a cada 15 segundos)
+  scrape_interval: 15s
+  # Timeout para cada coleta
+  scrape_timeout: 10s
+  # Intervalo para avaliar regras de alerta
+  evaluation_interval: 15s
+
+# Jobs de coleta (targets)
+scrape_configs:
+  # Job 1: Coletar métricas do Spring Boot
+  - job_name: 'spring-boot-blog'
+    # Formato das métricas (Prometheus)
+    metrics_path: '/actuator/prometheus'
+
+    # Onde buscar as métricas
+    static_configs:
+      - targets: ['host.docker.internal:8080']
+        labels:
+          application: 'blog-backend'
+          environment: 'development'

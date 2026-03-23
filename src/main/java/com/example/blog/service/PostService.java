@@ -2,6 +2,7 @@ package com.example.blog.service;
 
 import com.example.blog.model.Post;
 import com.example.blog.repository.PostRepository;
+import io.micrometer.core.instrument.Counter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -28,6 +29,12 @@ public class PostService {
     private final PostRepository postRepository;
 
     /**
+     * Métrica customizada: contador de visualizações de posts
+     * O Spring injeta automaticamente (vem do MetricsConfig)
+     */
+    private final Counter postViewsCounter;
+
+    /**
      * Buscar todos os posts.
      * Por enquanto simples, mas aqui você poderia adicionar:
      * - Ordenação (mais recentes primeiro)
@@ -46,8 +53,11 @@ public class PostService {
      * @throws PostNotFoundException se não existir
      */
     public Post getPostBySlug(String slug) {
-        return postRepository.findBySlug(slug)
+        Post post = postRepository.findBySlug(slug)
                 .orElseThrow(() -> new PostNotFoundException("Post não encontrado: " + slug));
+        postViewsCounter.increment();
+
+        return post;
     }
 
     /**
